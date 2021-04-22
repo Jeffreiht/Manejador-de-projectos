@@ -20,7 +20,7 @@
                         <h5 class="mr-auto">{{ $projecto->name }}</h5>
                         @foreach (Auth::user()->roles as $roles)
                             @foreach ($roles->permisos as $permiso)
-                                @if (Auth::user()->id == $projecto->user_id || $permiso->name == "Crear tarea")
+                                @if (Auth::user()->id == $projecto->user_id || $permiso->name == 'Crear tarea')
                                     <a href="{{ route('tarea.create', $projecto) }}" class="btn btn-sm btn-primary">Crear
                                         tarea</a>
                                 @endif
@@ -29,6 +29,12 @@
                     </div>
                     <div class="card-body">
                         <p>{{ $projecto->description }}</p>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" style="width: {{ $progreso }}%"
+                                aria-valuenow="{{ $progreso }}" aria-valuemin="0" aria-valuemax="100">
+                                {{ $progreso }} %
+                            </div>
+                        </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
                         <h6>
@@ -45,7 +51,7 @@
             @foreach ($tareas as $tarea)
                 @if ($projecto->id == $tarea->projecto_id)
                     <div class="col-md-4">
-                        <div class="card">
+                        <div class="card mb-2">
                             <div class="card-body">
                                 <p class="text-center"><strong>Titulo: </strong>{{ $tarea->title }}</p>
                                 <p><strong>Descripcion: </strong>{{ $tarea->description }}</p>

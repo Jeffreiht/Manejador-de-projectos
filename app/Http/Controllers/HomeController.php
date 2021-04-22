@@ -8,6 +8,7 @@ use App\Projecto;
 use App\Tarea;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -30,6 +31,9 @@ class HomeController extends Controller
     {
         $projectos = Projecto::latest()->get();
 
+        // $tareas = Tarea::latest()->get();
+        // $tareasC = Tarea::where('estado', 1)->count();
+        // dd($tareasC);
         
         // $tareas = User::select(['tareas_count' => Tarea::whereRaw('user_id  = users.id')
         //     ->selectRaw('count(*)') ])->get();

@@ -31,11 +31,11 @@
 
                             <p class="card-text text-muted">{{ $projecto->user->name }} <br>
                                 {{ $projecto->created_at->diffForHumans() }}</p>
-                            <div class="progress">
+                            {{-- <div class="progress">
                                 <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" style="width: 25%"
                                     aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="card-footer d-flex justify-content-between">
                             @if (Auth::user()->id == $projecto->user_id)

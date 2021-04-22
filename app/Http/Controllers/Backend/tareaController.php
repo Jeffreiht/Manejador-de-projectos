@@ -18,7 +18,12 @@ class tareaController extends Controller
     public function index(Projecto $projecto)
     {
         $tareas = Tarea::latest()->get();
-        return view('tasks.listTareas', compact('projecto', 'tareas'));
+        $tareasP = Tarea::where('projecto_id', $projecto->id)->count();
+        $tareasC = Tarea::where('estado', 1)
+            ->where('projecto_id', $projecto->id)
+            ->count();
+        $progreso = ($tareasC*100) / $tareasP;
+        return view('tasks.listTareas', compact('projecto', 'tareas', 'progreso'));
     }
 
     public function create(Projecto $projecto){
