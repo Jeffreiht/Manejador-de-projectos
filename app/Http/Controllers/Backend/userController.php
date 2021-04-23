@@ -7,6 +7,7 @@ use App\User;
 use App\Role;
 use App\Http\Requests\userRequest;
 use App\Http\Requests\editUserRequest;
+use Illuminate\Http\Request;
 
 class userController extends Controller
 {
@@ -16,9 +17,14 @@ class userController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->get();
+        $user = $request->user;
+        $role = $request->role;
+        $users = User::latest()
+            ->user($user)
+            ->role($role)
+            ->paginate(2);
         $roles = Role::latest()->get();
         return view('users.user', compact('users', 'roles'));
     }

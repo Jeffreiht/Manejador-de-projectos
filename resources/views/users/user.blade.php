@@ -77,6 +77,20 @@
                 </div>
             </div>
             <div class="col-md-8">
+                <h4>
+                    Buscar Usuario
+                    <form action="{{ route('user.index') }}" method="GET" class="form-inline float-right mb-2">
+                        <div class="form-group">
+                            <input type="text" name="user" class="form-control mr-1" placeholder="Usuario" value="{{ request('user') }}">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="role" class="form-control mr-1" placeholder="Role" value="{{ request('role') }}">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-secondary">Buscar</button>
+                        </div>
+                    </form>
+                </h4>
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -110,6 +124,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{ $users->links() }}
             </div>
         </div>
     </div>

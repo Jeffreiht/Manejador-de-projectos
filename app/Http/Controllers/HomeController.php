@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Permiso;
-use App\User;
 use App\Projecto;
 use App\Tarea;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -27,26 +25,32 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projectos = Projecto::latest()->get();
-
-        // $tareas = Tarea::latest()->get();
-        // $tareasC = Tarea::where('estado', 1)->count();
-        // dd($tareasC);
-        
-        // $tareas = User::select(['tareas_count' => Tarea::whereRaw('user_id  = users.id')
-        //     ->selectRaw('count(*)') ])->get();
+        $user = $request->user;
+        $projecto = $request->projecto;
+        $fecha = $request->get('fecha-creacion');
+        $estado = $request->estado;
+        $projectos = Projecto::latest()
+            ->admin($user)
+            ->projecto($projecto)
+            ->fecha($fecha)
+            ->estado($estado)
+            ->paginate();
         return view('projects.listProjectos', compact('projectos'));
     }
 
-    public function permiso()
+    public function permiso(Request $request)
     {
-        $permisos = Permiso::latest()->get();
+        $name = $request->name;
+        $permisos = Permiso::latest()
+            ->name($name)
+            ->paginate(3);
         return view('permisos', compact('permisos'));
     }
 
-    public function store(Request $request, Tarea $tarea){
+    public function store(Request $request, Tarea $tarea)
+    {
         if ($request->estado == 1) {
             $estado = [
                 'estado' => $request->estado
@@ -57,7 +61,8 @@ class HomeController extends Controller
         return back();
     }
 
-    public function update(Request $request, Projecto $projecto){
+    public function update(Request $request, Projecto $projecto)
+    {
         if ($request->estado == 1) {
             $estado = [
                 'estado' => $request->estado

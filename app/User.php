@@ -52,4 +52,19 @@ class User extends Authenticatable
     public function tasks(){
         return $this->hasMany(Tarea::class);
     }
+
+    //Scope para los buscadores
+    public function scopeUser($query, $user){
+        if ($user) {
+            $query->where('name', 'LIKE', "%$user%");
+        }
+    }
+
+    public function scopeRole($query, $role){
+        if ($role) {
+            $query->whereHas('roles', function ($q) use ($role){
+                $q->where('name', 'LIKE', '%'.$role.'%');
+            });
+        }
+    }
 }

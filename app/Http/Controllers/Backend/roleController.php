@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Role;
 use App\Permiso;
 use App\Http\Requests\roleRequest;
+use Illuminate\Http\Request;
 
 class roleController extends Controller
 {
@@ -15,9 +16,15 @@ class roleController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Role::latest()->get();
+        $role = $request->role;
+        $permiso = $request->permiso;
+
+        $roles = Role::latest()
+            ->role($role)
+            ->permiso($permiso)
+            ->paginate(2);
         $permisos = Permiso::latest()->get();
 
         return view('roles.roles', compact('roles','permisos'));

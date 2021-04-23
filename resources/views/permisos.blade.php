@@ -11,7 +11,18 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <table class="table tabe-hover table-bordered">
+                <h4>
+                    Buscar Permisos
+                    <form action="{{ route('permiso.index') }}" method="GET" class="form-inline float-right mb-2">
+                        <div class="form-group">
+                            <input type="text" name="name" class="form-control mr-1" placeholder="Buscar" value="{{ request('name') }}">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-secondary">Buscar</button>
+                        </div>
+                    </form>
+                </h4>
+                <table class="table table-bordered table-dark bg-dark table-hover">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -29,7 +40,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                
+                {{ $permisos->links() }}
             </div>
         </div>
     </div>

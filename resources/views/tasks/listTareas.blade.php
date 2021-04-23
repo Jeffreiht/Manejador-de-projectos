@@ -20,7 +20,11 @@
                         <h5 class="mr-auto">{{ $projecto->name }}</h5>
                         @foreach (Auth::user()->roles as $roles)
                             @foreach ($roles->permisos as $permiso)
-                                @if (Auth::user()->id == $projecto->user_id || $permiso->name == 'Crear tarea')
+                                @if ((Auth::user()->id == $projecto->user_id && $projecto->estado == 1) || $permiso->name == 'Crear tarea')
+                                    <a id="disabled" href="{{ route('tarea.create', $projecto) }}"
+                                        class="btn btn-sm btn-primary">Crear
+                                        tarea</a>
+                                @elseif (Auth::user()->id == $projecto->user_id || $permiso->name == 'Crear tarea')
                                     <a href="{{ route('tarea.create', $projecto) }}" class="btn btn-sm btn-primary">Crear
                                         tarea</a>
                                 @endif
@@ -30,8 +34,9 @@
                     <div class="card-body">
                         <p>{{ $projecto->description }}</p>
                         <div class="progress">
-                            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" style="width: {{ $progreso }}%"
-                                aria-valuenow="{{ $progreso }}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-striped bg-success progress-bar-animated"
+                                role="progressbar" style="width: {{ $progreso }}%" aria-valuenow="{{ $progreso }}"
+                                aria-valuemin="0" aria-valuemax="100">
                                 {{ $progreso }} %
                             </div>
                         </div>
@@ -66,7 +71,22 @@
                                 @foreach (Auth::user()->roles as $role)
                                     @if (Auth::user()->id == $projecto->user_id || ($role->name == 'Manager' && Auth::user()->name == $tarea->user->name))
 
-                                        @if (Auth::user()->name == $tarea->user->name)
+                                        @if ($tarea->estado == 1)
+                                            <form action="{{ route('tarea.destroy', $tarea) }}" method="POST">
+                                                @method('DELETE')
+                                                @csrf
+                                                <button disabled type="submit" class="btn btn-danger">Borrar</button>
+                                            </form>
+                                            <a id="disabled" href="{{ route('tarea.edit', $tarea) }}"
+                                                class="btn btn-primary">Editar</a>
+                                            <form action="{{ route('estado.store', $tarea) }}" method="POST">
+                                                @method('put')
+                                                <input type="checkbox" name="estado" value="1" hidden checked>
+                                                @csrf
+                                                <button disabled type="submit" class="btn btn-success">Completar</button>
+                                            </form>
+
+                                        @elseif (Auth::user()->name == $tarea->user->name)
                                             <form action="{{ route('tarea.destroy', $tarea) }}" method="POST">
                                                 @method('DELETE')
                                                 @csrf

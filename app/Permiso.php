@@ -12,4 +12,9 @@ class Permiso extends Model
     public function roles(){
         return $this->belongsToMany(Role::class);
     }
+
+    //Scope para los buscadores
+    public function scopeName($query, $name){
+        $query->where('name', 'LIKE', "%$name%");
+    }
 }
