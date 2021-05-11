@@ -51,5 +51,5 @@ Route::put('/role/{role}', 'Backend\roleController@update')->name('role.update')
 Route::delete('/role/{role}', 'Backend\roleController@destroy')->name('role.destroy');
 
 //Rutas de permisos
-Route::get('/permiso', 'HomeController@permiso')->name('permiso.index');
+Route::get('/permiso', 'HomeController@permiso')->middleware('permiso')->name('permiso.index');
 

@@ -53,6 +53,10 @@ class User extends Authenticatable
         return $this->hasMany(Tarea::class);
     }
 
+    // public function permisos(){
+    //     return $this->hasManyThrough(Permiso::class, Role::class);
+    // }
+
     //Scope para los buscadores
     public function scopeUser($query, $user){
         if ($user) {

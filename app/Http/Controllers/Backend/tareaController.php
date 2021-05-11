@@ -19,28 +19,34 @@ class tareaController extends Controller
     {
         $tareas = Tarea::latest()->get();
         $tareasP = Tarea::where('projecto_id', $projecto->id)->count();
-        $tareasC = Tarea::where('estado', 1)
-            ->where('projecto_id', $projecto->id)
-            ->count();
-        $progreso = ($tareasC*100) / $tareasP;
-        return view('tasks.listTareas', compact('projecto', 'tareas', 'progreso'));
+        if ($tareasP != 0) {
+            $tareasC = Tarea::where('estado', 1)
+                ->where('projecto_id', $projecto->id)
+                ->count();
+            $progreso = ($tareasC * 100) / $tareasP;
+            return view('tasks.listTareas', compact('projecto', 'tareas', 'progreso'));
+        }else{
+            $progreso = 0;
+            return view('tasks.listTareas', compact('projecto', 'tareas', 'progreso'));
+        }
     }
 
-    public function create(Projecto $projecto){
+    public function create(Projecto $projecto)
+    {
         $managers = DB::table('users')
-        ->join('role_user', 'role_user.user_id', '=', 'users.id')
-        ->join('roles', 'roles.id', '=', 'role_user.role_id')
-        ->where('roles.name', '=', 'Manager')
-        ->select('users.id', 'users.name')
-        ->get(); 
+            ->join('role_user', 'role_user.user_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->where('roles.name', '=', 'Manager')
+            ->select('users.id', 'users.name')
+            ->get();
         $empleados = DB::table('users')
             ->join('role_user', 'role_user.user_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('roles.name', '<>', 'Administrador')
             ->where('roles.name', '<>', 'Manager')
             ->select('users.id', 'users.name')
-            ->get(); 
-        return view('tasks.createTarea', compact('projecto','managers', 'empleados'));
+            ->get();
+        return view('tasks.createTarea', compact('projecto', 'managers', 'empleados'));
     }
 
     public function store(tareaRequest $request, Projecto $projecto)
@@ -48,7 +54,7 @@ class tareaController extends Controller
         $tarea = [
             'user_id' => $request->manager_id,
             'projecto_id' => $projecto->id,
-            'title' =>$request->title,
+            'title' => $request->title,
             'description' => $request->description
         ];
 
@@ -62,18 +68,18 @@ class tareaController extends Controller
     public function edit(Tarea $tarea)
     {
         $managers = DB::table('users')
-        ->join('role_user', 'role_user.user_id', '=', 'users.id')
-        ->join('roles', 'roles.id', '=', 'role_user.role_id')
-        ->where('roles.name', '=', 'Manager')
-        ->select('users.id', 'users.name')
-        ->get(); 
+            ->join('role_user', 'role_user.user_id', '=', 'users.id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->where('roles.name', '=', 'Manager')
+            ->select('users.id', 'users.name')
+            ->get();
         $empleados = DB::table('users')
             ->join('role_user', 'role_user.user_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('roles.name', '<>', 'Administrador')
             ->where('roles.name', '<>', 'Manager')
             ->select('users.id', 'users.name')
-            ->get(); 
+            ->get();
         return view('tasks.editTarea', compact('tarea', 'managers', 'empleados'));
     }
 
@@ -82,17 +88,17 @@ class tareaController extends Controller
         $result = [
             'user_id' => $request->manager_id,
             'projecto_id' => $tarea->projecto_id,
-            'title' =>$request->title,
+            'title' => $request->title,
             'description' => $request->description
         ];
         $tarea->update($result);
 
         $tarea->users()->sync($request->empleado_id);
 
-        return redirect('/tareas/'.$tarea->projecto_id)->with('status', 'La tarea se a aptualizado correctamente');
+        return redirect('/tareas/' . $tarea->projecto_id)->with('status', 'La tarea se a aptualizado correctamente');
     }
 
-    
+
     public function destroy(Tarea $tarea)
     {
         $tarea->delete();
